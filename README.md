@@ -9,9 +9,9 @@ Olá! Seja bem vindo ;)
 Essa aplicação tem como objetivo disponibillizar um front end para as APIs desenvolvidas em .Net core, Python e Java disponibilizadas nessa conta do github.
 Ela possui uma interfase para login e gerenciamento de uma base de dados exemplo de clientes.
 
-![GitHub Logo](/img/login.png)
+![Login](/img/login.png)![home](/img/home.png)![clientes](/img/crud.png)
 
-# Executando o projeto 
+## Executando o projeto 
 
 - Depois de clonar este repositório, navegue até a raiz dele.
 - Em seguida, execute no prompt `. / Get_packages.sh`
