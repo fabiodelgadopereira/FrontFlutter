@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -16,17 +15,17 @@ class Cliente {
 
   factory Cliente.fromJson(Map<String, dynamic> json) {
     return Cliente(
-      id: json['id'],
-      nome: json['nome'],
-      cidade: json['cidade'],
-      email: json['email'],
-      sexo: json['sexo'],
+      id: json['Id'],
+      nome: json['Nome'],
+      cidade: json['Cidade'],
+      email: json['Email'],
+      sexo: json['Sexo'],
     );
   }
 }
 
 class ClientesPage extends StatelessWidget {
-  Future<Cliente> clientes;
+  Future<List<Cliente>> clientes;
 
   @override
   void initState() {
@@ -38,9 +37,10 @@ class ClientesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     clientes = buscaClientes();
     return Column(children: <Widget>[
-      FutureBuilder<Cliente>(
+      FutureBuilder<List<Cliente>>(
         future: clientes,
         builder: (context, snapshot) {
+          List<Cliente> users = snapshot.data ?? [];
           if (snapshot.hasData) {
             return Expanded(
               child: Card(
@@ -49,6 +49,7 @@ class ClientesPage extends StatelessWidget {
                   child: ListView.builder(
                     padding: const EdgeInsets.all(8),
                     itemBuilder: (context, index) {
+                      Cliente cli = users[index];
                       return Column(
                         children: <Widget>[
                           ListTile(
@@ -58,12 +59,12 @@ class ClientesPage extends StatelessWidget {
                               size: 40.0,
                             ),
                             title: Text(
-                              snapshot.data.nome,
+                              cli.nome,
                               style: TextStyle(
                                   color: Colors.blue[900],
                                   fontWeight: FontWeight.bold),
                             ),
-                            subtitle: Text(snapshot.data.email),
+                            subtitle: Text(cli.email),
                             trailing: Icon(Icons.keyboard_arrow_right),
                             onTap: () {},
                           ),
@@ -73,7 +74,7 @@ class ClientesPage extends StatelessWidget {
                         ],
                       );
                     },
-                    itemCount: 1,
+                    itemCount: users.length,
                   ),
                 ),
               ),
@@ -90,9 +91,9 @@ class ClientesPage extends StatelessWidget {
   }
 }
 
-Future<Cliente> buscaClientes() async {
+Future<List<Cliente>> buscaClientes() async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  var url = "http://10.0.2.2:5003/api/Cliente/1";
+  var url = "http://10.0.2.2:5003/api/Cliente?PageIndex=1&PageSize=10";
 
   var token = sharedPreferences.getString("token");
   print("sharedPreferences : " + token);
@@ -101,10 +102,10 @@ Future<Cliente> buscaClientes() async {
     "accept": "*/*",
     HttpHeaders.authorizationHeader: 'Bearer $token',
   };
-  var jsonResponse = null;
   var response = await http.get(url, headers: headers);
   if (response.statusCode == 200) {
-    print("jsonResponse : " + response.body);
-    return Cliente.fromJson(json.decode(response.body));
+    return (json.decode(response.body)['data'] as List)
+        .map((data) => Cliente.fromJson(data))
+        .toList();
   }
 }
