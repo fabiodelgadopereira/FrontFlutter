@@ -123,7 +123,7 @@ class DetailScreen extends StatelessWidget {
             subtitle: Text('ID: '+cliente.id.toString()),
             leading: Icon(
               Icons.account_circle,
-              color: Colors.blue[500],
+              color: Colors.blue[900],
             ),
           ),
           Divider(),
@@ -132,21 +132,21 @@ class DetailScreen extends StatelessWidget {
                 style: TextStyle(fontWeight: FontWeight.w500)),
             leading: Icon(
               Icons.location_city,
-              color: Colors.blue[500],
+              color: Colors.blue[900],
             ),
           ),
           ListTile(
             title: Text(cliente.email),
             leading: Icon(
               Icons.contact_mail,
-              color: Colors.blue[500],
+              color: Colors.blue[900],
             ),
           ),
           ListTile(
             title: Text(cliente.sexo),
             leading: Icon(
               Icons.info,
-              color: Colors.blue[500],
+              color: Colors.blue[900],
             ),
           ),
         ],
