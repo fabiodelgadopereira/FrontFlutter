@@ -9,7 +9,14 @@ Olá! Seja bem vindo ;)
 Essa aplicação tem como objetivo disponibillizar um front end para as APIs desenvolvidas em .Net core, Python e Java disponibilizadas nessa conta do github.
 Ela possui uma interfase para login e gerenciamento de uma base de dados exemplo de clientes.
 
-![Login](/img/login.png)![home](/img/home.png)![clientes](/img/crud.png)![contato](/img/contato.png)
+#### Tela de login utilizando autenticação com backend
+![Login](/img/login.png)![home](/img/home.png)
+
+#### CRUD de uma base de dados de clientes
+![clientes](/img/crud.png)![detalhes](/img/detalhes.png)
+
+#### Tela de contato
+![contato](/img/contato.png)
 
 ## Executando o projeto 
 

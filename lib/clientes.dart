@@ -65,8 +65,16 @@ class ClientesPage extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                             subtitle: Text(cli.email),
-                            trailing: Icon(Icons.keyboard_arrow_right),
-                            onTap: () {},
+                            trailing: Icon(Icons.more_vert),
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      DetailScreen(cliente: cli),
+                                ),
+                              );
+                            },
                           ),
                           Divider(
                             height: 5.0,
@@ -88,6 +96,63 @@ class ClientesPage extends StatelessWidget {
         },
       )
     ]);
+  }
+}
+
+class DetailScreen extends StatelessWidget {
+  // Declare a field that holds the Todo.
+  final Cliente cliente;
+
+  // In the constructor, require a Todo.
+  DetailScreen({Key key, @required this.cliente}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    // Use the Todo to create the UI.
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Detalhes Cliente'),
+      ),
+      body: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+        children: [
+          ListTile(
+            title: Text(cliente.nome,
+                style: TextStyle(fontWeight: FontWeight.w500)),
+            subtitle: Text('ID: '+cliente.id.toString()),
+            leading: Icon(
+              Icons.account_circle,
+              color: Colors.blue[500],
+            ),
+          ),
+          Divider(),
+          ListTile(
+            title: Text(cliente.cidade,
+                style: TextStyle(fontWeight: FontWeight.w500)),
+            leading: Icon(
+              Icons.location_city,
+              color: Colors.blue[500],
+            ),
+          ),
+          ListTile(
+            title: Text(cliente.email),
+            leading: Icon(
+              Icons.contact_mail,
+              color: Colors.blue[500],
+            ),
+          ),
+          ListTile(
+            title: Text(cliente.sexo),
+            leading: Icon(
+              Icons.info,
+              color: Colors.blue[500],
+            ),
+          ),
+        ],
+      ),
+      ),
+    );
   }
 }
 
