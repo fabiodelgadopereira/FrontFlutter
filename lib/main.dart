@@ -7,13 +7,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'clientes.dart';
 import 'contact.dart';
+import 'home.dart';
 import 'login.dart';
 
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,9 +20,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: MainPage(),
       theme: ThemeData(
-        primaryColor: Colors.deepOrangeAccent,
-        accentColor: Colors.white70
-      ),
+          primaryColor: Colors.deepOrangeAccent, accentColor: Colors.white70),
     );
   }
 }
@@ -34,32 +31,25 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
-
   SharedPreferences sharedPreferences;
 
-    int _selectedIndex = 0;
-    static const TextStyle optionStyle =
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-    List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
-  ClientesPage(),
+  List<Widget> _widgetOptions = <Widget>[
+    HomePage(),
+    ClientesPage(),
     Text(
       'Index 2: Arquivos',
       style: optionStyle,
     ),
-     ContactPage(),
+    ContactPage(),
   ];
-    void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
-
-
 
   @override
   void initState() {
@@ -69,8 +59,10 @@ class _MainPageState extends State<MainPage> {
 
   checkLoginStatus() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    if(sharedPreferences.getString("token") == null) {
-      Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.of(context).pushAndRemoveUntil(
+          MaterialPageRoute(builder: (BuildContext context) => LoginPage()),
+          (Route<dynamic> route) => false);
     }
   }
 
@@ -84,7 +76,10 @@ class _MainPageState extends State<MainPage> {
             onPressed: () {
               sharedPreferences.clear();
               sharedPreferences.commit();
-              Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (BuildContext context) => LoginPage()), (Route<dynamic> route) => false);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(
+                      builder: (BuildContext context) => LoginPage()),
+                  (Route<dynamic> route) => false);
             },
             child: Text("Log Out", style: TextStyle(color: Colors.white)),
           ),
