@@ -12,8 +12,11 @@ Ela possui uma interfase para login e gerenciamento de uma base de dados exemplo
 #### Tela de login utilizando autenticação com backend
 ![Login](/img/login.png)![home](/img/home.png)
 
-#### CRUD de uma base de dados de clientes
+#### Consulta de clientes com detalhemento
 ![clientes](/img/crud.png)![detalhes](/img/detalhes.png)
+
+### adcionar e remover clientes
+![add](/img/add.png)
 
 #### Tela de contato
 ![contato](/img/contato.png)
