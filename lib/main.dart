@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:FrontFlutter/uploadfile.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
@@ -39,10 +40,7 @@ class _MainPageState extends State<MainPage> {
   List<Widget> _widgetOptions = <Widget>[
     HomePage(),
     ClientesPage(),
-    Text(
-      'Index 2: Arquivos',
-      style: optionStyle,
-    ),
+    UploadPage(),
     ContactPage(),
   ];
   void _onItemTapped(int index) {
