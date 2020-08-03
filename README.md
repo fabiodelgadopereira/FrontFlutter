@@ -31,6 +31,27 @@ Ela possui uma interfase para login e gerenciamento de uma base de dados exemplo
 
  - Flutter from Dart Code
 
+### Instalando uma biblioteca
+
+> Adicione a referência no arquivo pubspec.yaml do seu pacote, exemplo:
+
+```dart
+dependencies:
+  image_picker: ^0.6.7+4
+```
+
+> Você pode instalar pacotes a partir da linha de comando:
+
+```sh
+$ flutter pub get
+```
+
+Agora, no seu código Dart, você importa a referência:
+
+```dart
+import 'package:image_picker/image_picker.dart';
+```
+
 ## Suporte
 
 Por favor entre em contato conosco via [Email]
