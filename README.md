@@ -13,7 +13,7 @@ Ela possui uma interfase para login e gerenciamento de uma base de dados exemplo
 ![Login](/img/login.png)![home](/img/home.png)
 
 #### Consulta de clientes com detalhemento
-![clientes](/img/crud_v3.gif)![detalhes](/img/detalhes.png)
+![clientes](/img/crud_v4.gif)![detalhes](/img/detalhes.png)
 
 ### adcionar e remover clientes
 ![add](/img/add.png)
