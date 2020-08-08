@@ -67,36 +67,42 @@ class ClientesPage extends StatelessWidget {
                           padding: const EdgeInsets.all(8),
                           itemBuilder: (context, index) {
                             Cliente cli = users[index];
-                            return Column(
-                              children: <Widget>[
-                                ListTile(
-                                  leading: Icon(
-                                    Icons.account_circle,
-                                    color: Colors.blue[900],
-                                    size: 40.0,
+                            return GestureDetector(
+                              onLongPressStart:
+                                  (LongPressStartDetails details) {
+                                _showPopupMenu(context, details);
+                              },
+                              child: Column(
+                                children: <Widget>[
+                                  ListTile(
+                                    leading: Icon(
+                                      Icons.account_circle,
+                                      color: Colors.blue[900],
+                                      size: 40.0,
+                                    ),
+                                    title: Text(
+                                      cli.nome,
+                                      style: TextStyle(
+                                          color: Colors.blue[900],
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                    subtitle: Text(cli.email),
+                                    trailing: Icon(Icons.more_vert),
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) =>
+                                              DetailScreen(cliente: cli),
+                                        ),
+                                      );
+                                    },
                                   ),
-                                  title: Text(
-                                    cli.nome,
-                                    style: TextStyle(
-                                        color: Colors.blue[900],
-                                        fontWeight: FontWeight.bold),
+                                  Divider(
+                                    height: 5.0,
                                   ),
-                                  subtitle: Text(cli.email),
-                                  trailing: Icon(Icons.more_vert),
-                                  onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            DetailScreen(cliente: cli),
-                                      ),
-                                    );
-                                  },
-                                ),
-                                Divider(
-                                  height: 5.0,
-                                ),
-                              ],
+                                ],
+                              ),
                             );
                           },
                           itemCount: users.length,
@@ -117,6 +123,27 @@ class ClientesPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showPopupMenu(BuildContext context, LongPressStartDetails details) async {
+  var x = details.globalPosition.dx;
+  var y = details.globalPosition.dy;
+  await showMenu(
+    context: context,
+    position: RelativeRect.fromLTRB(x, y, 100, 100),
+    items: [
+      PopupMenuItem(
+        child: Text("Detalhes"),
+      ),
+      PopupMenuItem(
+        child: Text("Editar"),
+      ),
+      PopupMenuItem(
+        child: Text("Deletar"),
+      ),
+    ],
+    elevation: 8.0,
+  );
 }
 
 class AddScreen extends StatelessWidget {
