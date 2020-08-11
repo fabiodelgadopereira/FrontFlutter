@@ -35,6 +35,7 @@ class _MainPageState extends State<MainPage> {
   SharedPreferences sharedPreferences;
 
   int _selectedIndex = 0;
+  
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   List<Widget> _widgetOptions = <Widget>[
@@ -43,6 +44,7 @@ class _MainPageState extends State<MainPage> {
     UploadPage(),
     ContactPage(),
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;

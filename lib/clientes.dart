@@ -70,7 +70,7 @@ class ClientesPage extends StatelessWidget {
                             return GestureDetector(
                               onLongPressStart:
                                   (LongPressStartDetails details) {
-                                _showPopupMenu(context, details);
+                                _showPopupMenu(context, details, cli);
                               },
                               child: Column(
                                 children: <Widget>[
@@ -125,24 +125,73 @@ class ClientesPage extends StatelessWidget {
   }
 }
 
-void _showPopupMenu(BuildContext context, LongPressStartDetails details) async {
+void _showPopupMenu(
+    BuildContext context, LongPressStartDetails details, Cliente cli) async {
   var x = details.globalPosition.dx;
   var y = details.globalPosition.dy;
-  await showMenu(
+  int selected = await showMenu(
     context: context,
     position: RelativeRect.fromLTRB(x, y, 100, 100),
     items: [
       PopupMenuItem(
         child: Text("Detalhes"),
+        value: 0,
       ),
       PopupMenuItem(
         child: Text("Editar"),
+        value: 1,
       ),
       PopupMenuItem(
         child: Text("Deletar"),
+        value: 2,
       ),
     ],
     elevation: 8.0,
+  );
+  if (selected == 0) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => DetailScreen(cliente: cli),
+      ),
+    );
+  }
+  if (selected == 1) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => AddScreen(),
+      ),
+    );
+  }
+  if (selected == 2) {
+    _deletarCliente(context, cli);
+  }
+}
+
+Future<void> _deletarCliente(BuildContext context, Cliente cli) {
+  Widget cancelaButton = FlatButton(
+    child: Text("Cancelar"),
+    onPressed: () {},
+  );
+  Widget continuaButton = FlatButton(
+    child: Text("Confirmar"),
+    color: Colors.red,
+    onPressed: () {},
+  );
+
+  return showDialog<void>(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text('Deletar'),
+        content: Text('Deseja deletar o cliente ' + cli.nome + " ?"),
+        actions: <Widget>[
+          cancelaButton,
+          continuaButton,
+        ],
+      );
+    },
   );
 }
 
