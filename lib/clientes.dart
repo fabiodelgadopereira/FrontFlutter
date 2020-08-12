@@ -160,7 +160,7 @@ void _showPopupMenu(
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AddScreen(),
+        builder: (context) => UpdateScreen(cliente: cli),
       ),
     );
   }
@@ -172,12 +172,16 @@ void _showPopupMenu(
 Future<void> _deletarCliente(BuildContext context, Cliente cli) {
   Widget cancelaButton = FlatButton(
     child: Text("Cancelar"),
-    onPressed: () {},
+    onPressed: () {
+      Navigator.pop(context);
+    },
   );
   Widget continuaButton = FlatButton(
     child: Text("Confirmar"),
     color: Colors.red,
-    onPressed: () {},
+    onPressed: () {
+      Navigator.pop(context);
+    },
   );
 
   return showDialog<void>(
@@ -205,6 +209,78 @@ class AddScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Cadastrar Cliente'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: <Widget>[
+            TextField(
+              controller: _controladorNome,
+              decoration: InputDecoration(labelText: 'Nome'),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: TextField(
+                controller: _controladorEmail,
+                decoration: InputDecoration(labelText: 'E-mail'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: TextField(
+                controller: _controladorCidade,
+                decoration: InputDecoration(labelText: 'Cidade'),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16.0),
+              child: TextField(
+                controller: _controladorSexo,
+                decoration: InputDecoration(labelText: 'Sexo'),
+              ),
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          final String nome = _controladorNome.text;
+          final String email = _controladorEmail.text;
+          final String valor = _controladorCidade.text;
+          final String sexo = _controladorSexo.text;
+          // todo
+          // final Cliente ClienteNovo = Cliente(nome, quantidade, valor);
+          // print(produtoNovo);
+        },
+        label: Text('Salvar'),
+        icon: Icon(Icons.check),
+        backgroundColor: Colors.green[300],
+      ),
+    );
+  }
+}
+
+class UpdateScreen extends StatelessWidget {
+   final Cliente cliente;
+
+  // In the constructor, require a Todo.
+  UpdateScreen({Key key, @required this.cliente}) : super(key: key);
+
+   TextEditingController _controladorNome ;
+   TextEditingController _controladorCidade;
+   TextEditingController _controladorEmail ;
+   TextEditingController _controladorSexo;
+
+  @override
+  Widget build(BuildContext context) {
+    _controladorNome = new TextEditingController(text: cliente.nome);
+    _controladorCidade = TextEditingController(text: cliente.cidade);
+    _controladorEmail = TextEditingController(text: cliente.email);
+     _controladorSexo = TextEditingController(text: cliente.sexo);
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Cadastrar Cliente'),
