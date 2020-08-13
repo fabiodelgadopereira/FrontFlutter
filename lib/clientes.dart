@@ -123,7 +123,7 @@ class ClientesPage extends StatelessWidget {
       ),
     );
   }
-}
+
 
 void _showPopupMenu(
     BuildContext context, LongPressStartDetails details, Cliente cli) async {
@@ -166,6 +166,7 @@ void _showPopupMenu(
   }
   if (selected == 2) {
     _deletarCliente(context, cli);
+    initState();
   }
 }
 
@@ -180,7 +181,9 @@ Future<void> _deletarCliente(BuildContext context, Cliente cli) {
     child: Text("Confirmar"),
     color: Colors.red,
     onPressed: () {
-      Navigator.pop(context);
+      deletarCliente(cli.id);
+      Navigator.of(context).pop();
+      
     },
   );
 
@@ -198,7 +201,7 @@ Future<void> _deletarCliente(BuildContext context, Cliente cli) {
     },
   );
 }
-
+}
 class AddScreen extends StatelessWidget {
   AddScreen({Key key}) : super(key: key);
 
@@ -390,6 +393,21 @@ class DetailScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void deletarCliente(int id) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var url = "http://10.0.2.2:5003/api/Cliente/$id";
+
+  var token = sharedPreferences.getString("token");
+  print("sharedPreferences : " + token);
+  var headers = {
+    "Content-Type": "application/json",
+    "accept": "*/*",
+    HttpHeaders.authorizationHeader: 'Bearer $token',
+  };
+  var response = await http.delete(url, headers: headers);
+  print (response.body);
 }
 
 Future<List<Cliente>> buscaClientes() async {
