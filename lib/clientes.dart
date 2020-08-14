@@ -324,11 +324,10 @@ class UpdateScreen extends StatelessWidget {
         onPressed: () {
           final String nome = _controladorNome.text;
           final String email = _controladorEmail.text;
-          final String valor = _controladorCidade.text;
+          final String cidade = _controladorCidade.text;
           final String sexo = _controladorSexo.text;
-          // todo
-          // final Cliente ClienteNovo = Cliente(nome, quantidade, valor);
-          // print(produtoNovo);
+          updateCliente(cliente.id, nome, cidade,email,sexo);
+          Navigator.of(context).pop();
         },
         label: Text('Salvar'),
         icon: Icon(Icons.check),
@@ -407,6 +406,27 @@ void deletarCliente(int id) async {
     HttpHeaders.authorizationHeader: 'Bearer $token',
   };
   var response = await http.delete(url, headers: headers);
+  print (response.body);
+}
+void updateCliente(int id, String nome, String endereco, String email, String sexo) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var url = "http://10.0.2.2:5003/api/Cliente";
+
+  var token = sharedPreferences.getString("token");
+  print("sharedPreferences : " + token);
+  var headers = {
+    "Content-Type": "application/json",
+    "accept": "*/*",
+    HttpHeaders.authorizationHeader: 'Bearer $token',
+  };
+  var bodies =  json.encode({
+      "Id": "$id",
+    "Nome": "$nome",
+    "Cidade": "$endereco",
+    "Email": "$email",
+    "Sexo": "$sexo",
+  }) ;
+  var response = await http.put(url, headers: headers,body:bodies );
   print (response.body);
 }
 
