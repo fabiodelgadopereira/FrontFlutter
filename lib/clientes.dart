@@ -124,84 +124,83 @@ class ClientesPage extends StatelessWidget {
     );
   }
 
-
-void _showPopupMenu(
-    BuildContext context, LongPressStartDetails details, Cliente cli) async {
-  var x = details.globalPosition.dx;
-  var y = details.globalPosition.dy;
-  int selected = await showMenu(
-    context: context,
-    position: RelativeRect.fromLTRB(x, y, 100, 100),
-    items: [
-      PopupMenuItem(
-        child: Text("Detalhes"),
-        value: 0,
-      ),
-      PopupMenuItem(
-        child: Text("Editar"),
-        value: 1,
-      ),
-      PopupMenuItem(
-        child: Text("Deletar"),
-        value: 2,
-      ),
-    ],
-    elevation: 8.0,
-  );
-  if (selected == 0) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => DetailScreen(cliente: cli),
-      ),
+  void _showPopupMenu(
+      BuildContext context, LongPressStartDetails details, Cliente cli) async {
+    var x = details.globalPosition.dx;
+    var y = details.globalPosition.dy;
+    int selected = await showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(x, y, 100, 100),
+      items: [
+        PopupMenuItem(
+          child: Text("Detalhes"),
+          value: 0,
+        ),
+        PopupMenuItem(
+          child: Text("Editar"),
+          value: 1,
+        ),
+        PopupMenuItem(
+          child: Text("Deletar"),
+          value: 2,
+        ),
+      ],
+      elevation: 8.0,
     );
-  }
-  if (selected == 1) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UpdateScreen(cliente: cli),
-      ),
-    );
-  }
-  if (selected == 2) {
-    _deletarCliente(context, cli);
-    initState();
-  }
-}
-
-Future<void> _deletarCliente(BuildContext context, Cliente cli) {
-  Widget cancelaButton = FlatButton(
-    child: Text("Cancelar"),
-    onPressed: () {
-      Navigator.pop(context);
-    },
-  );
-  Widget continuaButton = FlatButton(
-    child: Text("Confirmar"),
-    color: Colors.red,
-    onPressed: () {
-      deletarCliente(cli.id);
-      Navigator.of(context).pop();
-      
-    },
-  );
-
-  return showDialog<void>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text('Deletar'),
-        content: Text('Deseja deletar o cliente ' + cli.nome + " ?"),
-        actions: <Widget>[
-          cancelaButton,
-          continuaButton,
-        ],
+    if (selected == 0) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => DetailScreen(cliente: cli),
+        ),
       );
-    },
-  );
+    }
+    if (selected == 1) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UpdateScreen(cliente: cli),
+        ),
+      );
+    }
+    if (selected == 2) {
+      _deletarCliente(context, cli);
+      initState();
+    }
+  }
+
+  Future<void> _deletarCliente(BuildContext context, Cliente cli) {
+    Widget cancelaButton = FlatButton(
+      child: Text("Cancelar"),
+      onPressed: () {
+        Navigator.pop(context);
+      },
+    );
+    Widget continuaButton = FlatButton(
+      child: Text("Confirmar"),
+      color: Colors.red,
+      onPressed: () {
+        deletarCliente(cli.id);
+        Navigator.of(context).pop();
+      },
+    );
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Deletar'),
+          content: Text('Deseja deletar o cliente ' + cli.nome + " ?"),
+          actions: <Widget>[
+            cancelaButton,
+            continuaButton,
+          ],
+        );
+      },
+    );
+  }
 }
-}
+
 class AddScreen extends StatelessWidget {
   AddScreen({Key key}) : super(key: key);
 
@@ -252,11 +251,11 @@ class AddScreen extends StatelessWidget {
         onPressed: () {
           final String nome = _controladorNome.text;
           final String email = _controladorEmail.text;
-          final String valor = _controladorCidade.text;
+          final String cidade = _controladorCidade.text;
           final String sexo = _controladorSexo.text;
-          // todo
-          // final Cliente ClienteNovo = Cliente(nome, quantidade, valor);
-          // print(produtoNovo);
+
+          inserirCliente(nome, cidade, email, sexo);
+          Navigator.of(context).pop();
         },
         label: Text('Salvar'),
         icon: Icon(Icons.check),
@@ -264,25 +263,27 @@ class AddScreen extends StatelessWidget {
       ),
     );
   }
+
+  void inserirCliente(String nome, String cidade, String email, String sexo) {}
 }
 
 class UpdateScreen extends StatelessWidget {
-   final Cliente cliente;
+  final Cliente cliente;
 
   // In the constructor, require a Todo.
   UpdateScreen({Key key, @required this.cliente}) : super(key: key);
 
-   TextEditingController _controladorNome ;
-   TextEditingController _controladorCidade;
-   TextEditingController _controladorEmail ;
-   TextEditingController _controladorSexo;
+  TextEditingController _controladorNome;
+  TextEditingController _controladorCidade;
+  TextEditingController _controladorEmail;
+  TextEditingController _controladorSexo;
 
   @override
   Widget build(BuildContext context) {
     _controladorNome = new TextEditingController(text: cliente.nome);
     _controladorCidade = TextEditingController(text: cliente.cidade);
     _controladorEmail = TextEditingController(text: cliente.email);
-     _controladorSexo = TextEditingController(text: cliente.sexo);
+    _controladorSexo = TextEditingController(text: cliente.sexo);
 
     return Scaffold(
       appBar: AppBar(
@@ -326,7 +327,7 @@ class UpdateScreen extends StatelessWidget {
           final String email = _controladorEmail.text;
           final String cidade = _controladorCidade.text;
           final String sexo = _controladorSexo.text;
-          updateCliente(cliente.id, nome, cidade,email,sexo);
+          updateCliente(cliente.id, nome, cidade, email, sexo);
           Navigator.of(context).pop();
         },
         label: Text('Salvar'),
@@ -394,6 +395,28 @@ class DetailScreen extends StatelessWidget {
   }
 }
 
+void inserirCliente(
+    String nome, String endereco, String email, String sexo) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var url = "http://10.0.2.2:5003/api/Cliente";
+
+  var token = sharedPreferences.getString("token");
+  print("sharedPreferences : " + token);
+  var headers = {
+    "Content-Type": "application/json",
+    "accept": "*/*",
+    HttpHeaders.authorizationHeader: 'Bearer $token',
+  };
+  var bodies = json.encode({
+    "Nome": "$nome",
+    "Cidade": "$endereco",
+    "Email": "$email",
+    "Sexo": "$sexo",
+  });
+  var response = await http.post(url, headers: headers, body: bodies);
+  print(response.body);
+}
+
 void deletarCliente(int id) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   var url = "http://10.0.2.2:5003/api/Cliente/$id";
@@ -406,9 +429,11 @@ void deletarCliente(int id) async {
     HttpHeaders.authorizationHeader: 'Bearer $token',
   };
   var response = await http.delete(url, headers: headers);
-  print (response.body);
+  print(response.body);
 }
-void updateCliente(int id, String nome, String endereco, String email, String sexo) async {
+
+void updateCliente(
+    int id, String nome, String endereco, String email, String sexo) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   var url = "http://10.0.2.2:5003/api/Cliente";
 
@@ -419,15 +444,15 @@ void updateCliente(int id, String nome, String endereco, String email, String se
     "accept": "*/*",
     HttpHeaders.authorizationHeader: 'Bearer $token',
   };
-  var bodies =  json.encode({
-      "Id": "$id",
+  var bodies = json.encode({
+    "Id": "$id",
     "Nome": "$nome",
     "Cidade": "$endereco",
     "Email": "$email",
     "Sexo": "$sexo",
-  }) ;
-  var response = await http.put(url, headers: headers,body:bodies );
-  print (response.body);
+  });
+  var response = await http.put(url, headers: headers, body: bodies);
+  print(response.body);
 }
 
 Future<List<Cliente>> buscaClientes() async {
