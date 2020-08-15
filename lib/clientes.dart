@@ -25,17 +25,32 @@ class Cliente {
 }
 
 class ClientesPage extends StatelessWidget {
-  Future<List<Cliente>> clientes;
-
+  List<Cliente> clientes;
+  ScrollController _scrollController = new ScrollController();
+  int count = 1;
   @override
   void initState() {
     print("initState");
-    clientes = buscaClientes();
+    buscaClientes(count);
   }
+/*  @override
+  void dispose(){
+    _scrollController.dispose();
+    super.dispose();
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    clientes = buscaClientes();
+    buscaClientes(count);
+
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        count++;
+        print(count);
+          buscaClientes(count);
+      }
+    });
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -55,7 +70,7 @@ class ClientesPage extends StatelessWidget {
         child: Column(
           children: <Widget>[
             FutureBuilder<List<Cliente>>(
-              future: clientes,
+              future: buscaClientes(count),
               builder: (context, snapshot) {
                 List<Cliente> users = snapshot.data ?? [];
                 if (snapshot.hasData) {
@@ -64,6 +79,7 @@ class ClientesPage extends StatelessWidget {
                       margin: EdgeInsets.fromLTRB(10, 5, 10, 0),
                       child: Scrollbar(
                         child: ListView.builder(
+                          controller: _scrollController,
                           padding: const EdgeInsets.all(8),
                           itemBuilder: (context, index) {
                             Cliente cli = users[index];
@@ -199,6 +215,33 @@ class ClientesPage extends StatelessWidget {
       },
     );
   }
+Future<List<Cliente>> buscaClientes(int entrada) async {
+  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  var url = "http://10.0.2.2:5003/api/Cliente?PageIndex=$entrada&PageSize=10";
+
+  var token = sharedPreferences.getString("token");
+  print("sharedPreferences : " + token);
+  var headers = {
+    "Content-Type": "application/json",
+    "accept": "*/*",
+    HttpHeaders.authorizationHeader: 'Bearer $token',
+  };
+  var response = await http.get(url, headers: headers);
+  if (response.statusCode == 200) {
+    if(clientes==null){
+     clientes = (json.decode(response.body)['data'] as List)
+        .map((data) => Cliente.fromJson(data))
+        .toList();
+    }
+    else{
+       clientes.addAll( (json.decode(response.body)['data'] as List)
+        .map((data) => Cliente.fromJson(data))
+        .toList());
+    }
+  }
+  return clientes;
+}
+
 }
 
 class AddScreen extends StatelessWidget {
@@ -455,21 +498,4 @@ void updateCliente(
   print(response.body);
 }
 
-Future<List<Cliente>> buscaClientes() async {
-  SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
-  var url = "http://10.0.2.2:5003/api/Cliente?PageIndex=1&PageSize=10";
 
-  var token = sharedPreferences.getString("token");
-  print("sharedPreferences : " + token);
-  var headers = {
-    "Content-Type": "application/json",
-    "accept": "*/*",
-    HttpHeaders.authorizationHeader: 'Bearer $token',
-  };
-  var response = await http.get(url, headers: headers);
-  if (response.statusCode == 200) {
-    return (json.decode(response.body)['data'] as List)
-        .map((data) => Cliente.fromJson(data))
-        .toList();
-  }
-}
